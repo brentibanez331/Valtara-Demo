@@ -6,11 +6,12 @@ public class SlimeBehaviour : MonoBehaviour
 {
     public int maxHealthPoint = 100;
     public int currentHealth;
+    public bool startAction = false;
 
     public HealthBar healthbar;
 
     Transform player;
-    float targetTime = 3f;
+    float targetTime = 2f;
     float speed = 2f;
     float jumpHeight = 7f;
     bool isGrounded = false;
@@ -18,7 +19,6 @@ public class SlimeBehaviour : MonoBehaviour
     public GameObject slashPrefab;
     public GameObject lootPrefab;
     public GameObject lootTarget;
-    public GameObject resPoint;
 
     Vector3 offset;
 
@@ -39,43 +39,46 @@ public class SlimeBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 newPos = new Vector3(player.position.x, 0, 0);
-
-        if (targetTime > 0)
+        if (startAction)
         {
-            targetTime -= Time.deltaTime;
-        }
+            Vector3 newPos = new Vector3(player.position.x, 0, 0);
 
-        Vector3 scale = transform.localScale;
-
-        if (isGrounded)
-        {
-            if (player.position.x > transform.position.x)
+            if (targetTime > 0)
             {
-                scale.x = Mathf.Abs(scale.x) * 1;
+                targetTime -= Time.deltaTime;
+            }
+
+            Vector3 scale = transform.localScale;
+
+            if (isGrounded)
+            {
+                if (player.position.x > transform.position.x)
+                {
+                    scale.x = Mathf.Abs(scale.x) * 1;
+                }
+                else
+                {
+                    scale.x = Mathf.Abs(scale.x) * -1;
+                }
+                transform.localScale = scale;
             }
             else
             {
-                scale.x = Mathf.Abs(scale.x) * -1;
+                if (player.position.x > transform.position.x)
+                {
+                    transform.Translate(speed * Time.deltaTime, 0f, 0f);
+                }
+                else
+                {
+                    transform.Translate(speed * Time.deltaTime * -1, 0f, 0f);
+                }
             }
-            transform.localScale = scale;
-        }
-        else
-        {
-            if (player.position.x > transform.position.x)
-            {
-                transform.Translate(speed * Time.deltaTime, 0f, 0f);
-            }
-            else
-            {
-                transform.Translate(speed * Time.deltaTime * -1, 0f, 0f);
-            }
-        }
 
-        if (targetTime <= 0)
-        {   
-            Jump();
-            speed = 2;
+            if (targetTime <= 0)
+            {
+                Jump();
+                speed = 2;
+            }
         }
 
         if(currentHealth <= 0)
@@ -86,9 +89,10 @@ public class SlimeBehaviour : MonoBehaviour
 
                 go.GetComponent<LootFollow>().target = lootTarget.transform;
             }
-            transform.position = resPoint.transform.position;
-            currentHealth = maxHealthPoint;
-            healthbar.SetMaxHealth(maxHealthPoint); 
+            //transform.position = resPoint.transform.position;
+            //currentHealth = maxHealthPoint;
+            //healthbar.SetMaxHealth(maxHealthPoint); 
+            Destroy(gameObject);
         }
     }
 

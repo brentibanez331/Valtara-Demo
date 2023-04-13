@@ -8,6 +8,8 @@ TagManager:
   - Obstacle
   - Enemy
   - DropLootTracker
+  - Slimemeee
+  - Enemy2
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - 
   - Player
   - Slime
-  - 
+  - Slime2
   - 
   - 
   - 
